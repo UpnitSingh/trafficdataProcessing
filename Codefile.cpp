@@ -22,7 +22,7 @@ std::mutex dataMutex;
 std::condition_variable queueCondVar;
 std::map<std::string, int> congestionData;
 
-// Sample traffic data (replaces file reading)
+// Extended traffic data (30 entries)
 std::vector<std::string> trafficData = {
     "2025-03-28 08:00:00,TL1,5",
     "2025-03-28 08:01:00,TL2,3",
@@ -31,7 +31,29 @@ std::vector<std::string> trafficData = {
     "2025-03-28 08:04:00,TL2,6",
     "2025-03-28 08:05:00,TL1,2",
     "2025-03-28 08:06:00,TL3,8",
-    "2025-03-28 08:07:00,TL2,5"
+    "2025-03-28 08:07:00,TL2,5",
+    "2025-03-28 08:08:00,TL1,3",
+    "2025-03-28 08:09:00,TL2,2",
+    "2025-03-28 08:10:00,TL3,6",
+    "2025-03-28 08:11:00,TL1,4",
+    "2025-03-28 08:12:00,TL2,1",
+    "2025-03-28 08:13:00,TL3,5",
+    "2025-03-28 08:14:00,TL1,6",
+    "2025-03-28 08:15:00,TL2,7",
+    "2025-03-28 08:16:00,TL3,3",
+    "2025-03-28 08:17:00,TL1,2",
+    "2025-03-28 08:18:00,TL2,4",
+    "2025-03-28 08:19:00,TL3,1",
+    "2025-03-28 08:20:00,TL1,7",
+    "2025-03-28 08:21:00,TL2,2",
+    "2025-03-28 08:22:00,TL3,6",
+    "2025-03-28 08:23:00,TL1,3",
+    "2025-03-28 08:24:00,TL2,8",
+    "2025-03-28 08:25:00,TL3,4",
+    "2025-03-28 08:26:00,TL1,5",
+    "2025-03-28 08:27:00,TL2,3",
+    "2025-03-28 08:28:00,TL3,2",
+    "2025-03-28 08:29:00,TL1,4"
 };
 
 // Producer function
@@ -42,7 +64,7 @@ void producer(int producerID, std::vector<std::string> dataChunk) {
 
         trafficQueue.push(line);
         std::cout << "Producer " << producerID << " added: " << line << std::endl;
-        
+
         lock.unlock();
         queueCondVar.notify_all();
 
@@ -86,7 +108,7 @@ void getTopN() {
         return a.second > b.second;
     });
 
-    std::cout << "Top " << TOP_N << " congested traffic lights:\n";
+    std::cout << "\nTop " << TOP_N << " congested traffic lights:\n";
     for (int i = 0; i < std::min(TOP_N, (int)sortedData.size()); ++i) {
         std::cout << sortedData[i].first << ": " << sortedData[i].second << " cars\n";
     }
